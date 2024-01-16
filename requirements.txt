@@ -1,0 +1,15 @@
+opencv-python
+cvzone
+flask
+flask-cors
+keras
+gunicorn
+matplotlib
+mediapipe
+numpy
+pandas
+pytube
+pillow
+scikit-learn
+tensorflow
+
