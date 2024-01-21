@@ -22,22 +22,20 @@ from pytube import YouTube
 def textDetection(videoUrl):
     try:
         # Thay đổi đường dẫn tới video của bạn hoặc đường dẫn URL
-        # video_path = "C:\\Users\\ASUS\\Desktop\\ASL-hand-gestures\\resources\\video_demo.mp4"
-        # cap = cv2.VideoCapture(video_path)
+        # video_path = "AI_HandSign/videos/video.mp4"
+        cap = cv2.VideoCapture(videoUrl)
 
         # URL của video trên YouTube
-        # video_url = 'https://youtu.be/iSWqpZ0tXNE'
-        try:
-            yt = YouTube(videoUrl)
-            videoStream = yt.streams.get_highest_resolution()
-        except Exception as e:
-            # print("Lỗi đường dẫn video!")
-            return "Lỗi đường dẫn video!"
-
-        cap = cv2.VideoCapture(videoStream.url)
+        # try:
+        #     yt = YouTube(videoUrl)
+        #     videoStream = yt.streams.get_highest_resolution()
+        # except Exception as e:
+        #     print("Lỗi đường dẫn video!")
+        #     return None
+        # cap = cv2.VideoCapture(videoStream.url)
 
         detector = HandDetector(maxHands=1)
-        classifier = Classifier("AI_HandSign/models/mymodel.h5", "AI_HandSign/models/labels.txt")
+        classifier = Classifier("ai/models/mymodel.h5", "ai/models/labels.txt")
         offset = 20
         imgSize = 300
 
@@ -51,7 +49,8 @@ def textDetection(videoUrl):
             if not success:
                 break
 
-            imgOutput = img.copy()
+            # imgOutput = img.copy()
+
             hands, img = detector.findHands(img)
 
             if hands:
@@ -73,7 +72,6 @@ def textDetection(videoUrl):
                     wGap = math.ceil((imgSize - wCal) / 2)
                     imgWhite[:, wGap:wCal + wGap] = imgResize
                     prediction, index = classifier.getPrediction(imgWhite, draw=False)
-                    # print(prediction, index)
 
                 else:
                     k = imgSize / w
@@ -84,17 +82,16 @@ def textDetection(videoUrl):
                     imgWhite[hGap:hCal + hGap, :] = imgResize
                     prediction, index = classifier.getPrediction(imgWhite, draw=False)
 
-                cv2.rectangle(imgOutput, (x - offset, y - offset-50),
-                            (x - offset+90, y - offset-50+50), (255, 0, 255), cv2.FILLED)
-                cv2.putText(imgOutput, labels[index], (x, y -26), cv2.FONT_HERSHEY_COMPLEX, 1.7, (255, 255, 255), 2)
-                cv2.rectangle(imgOutput, (x-offset, y-offset),
-                            (x + w+offset, y + h+offset), (255, 0, 255), 4)
+                # cv2.rectangle(imgOutput, (x - offset, y - offset-50),
+                #             (x - offset+90, y - offset-50+50), (255, 0, 255), cv2.FILLED)
+                # cv2.putText(imgOutput, labels[index], (x, y -26), cv2.FONT_HERSHEY_COMPLEX, 1.7, (255, 255, 255), 2)
+                # cv2.rectangle(imgOutput, (x-offset, y-offset),
+                #             (x + w+offset, y + h+offset), (255, 0, 255), 4)
                 
                 # Text detection
                 text_tmp = str(labels[index])
                 if len(detectedTexts) == 0 or str(text_tmp) != detectedTexts[-1]:
                     detectedTexts += text_tmp
-                # detectedTexts += str(labels[index])
 
 
             # cv2.imshow("Image", imgOutput)
@@ -108,5 +105,6 @@ def textDetection(videoUrl):
         return detectedTexts
     
     except Exception as e:
-        return "Có lỗi xảy ra trong quá trình sử dụng!"
+        print("Có lỗi xảy ra trong quá trình sử dụng!")
+        return None
     

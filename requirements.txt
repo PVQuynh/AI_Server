@@ -1,4 +1,3 @@
-opencv-python
 cvzone
 flask
 flask-cors
@@ -7,9 +6,9 @@ gunicorn
 matplotlib
 mediapipe
 numpy
+opencv-python
 pandas
 pytube
 pillow
 scikit-learn
 tensorflow
-

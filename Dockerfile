@@ -1,17 +1,11 @@
-# Sử dụng image chứa Python 3.11.3
-FROM python:3.11.3
-
-# Thiết lập thư mục làm việc trong container
+FROM python:3.11.3 
 WORKDIR /app
+COPY . /app
+RUN apt-get update && apt-get install -y libgl1-mesa-glx
+RUN python -m pip install --upgrade pip
+RUN pip install --no-cache-dir -r requirements.txt
+EXPOSE 5000
+CMD python ./index.py
 
-# Sao chép tệp requirements.txt vào container
-COPY requirements.txt requirements.txt
-
-# Cài đặt các dependencies từ requirements.txt
-RUN pip install -r requirements.txt
-
-# Sao chép tất cả các tệp từ thư mục hiện tại của máy chủ vào thư mục /app trong container
-COPY . .
-
-# CMD để chạy ứng dụng Flask sử dụng Gunicorn
-CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "app:app"]
+# docker build -t quynhpv/ai_server:v1 . 
+# docker container run -d -p 5000:5000 quynhpv/ai_server:v1
