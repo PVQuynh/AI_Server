@@ -46,7 +46,7 @@ def validation():
                 else:
                     MessageResponse['message'] = 'Không phát hiện chữ cái nào!'
                 
-                # os.remove(video_path)
+                os.remove(video_path)
 
         except Exception as e:
             print(f'Error: {e}')
